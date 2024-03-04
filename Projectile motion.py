@@ -1,5 +1,3 @@
-# Before Run the COde, Do "pip install sympy matplotlib"
-
 from sympy import *
 from sympy.abc import *
 from sympy import pi
@@ -22,7 +20,7 @@ p1 = plot_parametric(
     (X(T, 45), Y(T, 45), (T, 0, T1(45))), 
     (X(T, 44), Y(T, 44), (T, 0, T1(44))), 
     (X(T, 46), Y(T, 46), (T, 0, T1(46))),
-    legend=True,
+    legend= True,
     title="no air resistance"
 )
 
