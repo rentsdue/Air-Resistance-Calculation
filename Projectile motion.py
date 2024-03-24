@@ -18,29 +18,31 @@ class Ball:
         self.drag = drag
         self.velocity_x = velocity * math.cos (degrees * math.pi / 180)
         self.velocity_y = - velocity * math.sin (degrees * math.pi / 180)
-        self.acceleration_x = ( - drag * self.velocity_x) / mass # Need to fix this part
+        self.acceleration_x = (- drag * self.velocity_x) / mass # Need to fix this part
         self.acceleration_y = 9.8 + (drag * self.velocity_y / mass)  # You can adjust this value for gravity
 
     def update(self):
         # Update the object's position
         self.velocity_y += self.acceleration_y
+
+        if self.velocity_y == 0:
+            self.acceleration_y = 9.8 - (self.drag * self.velocity_y / self.mass)
+        
+        if self.velocity_y == (self.mass * 9.8 / self.drag):
+            print("Terminal velocity has been reached")
+        
         self.velocity_x += self.acceleration_x
-        self.y += self.velocity_y
-        self.x += self.velocity_x  # Added horizontal motion
 
         if self.velocity_x == 0:
             self.velocity_x = 0
+        
+        self.y += self.velocity_y
+        self.x += self.velocity_x  # Added horizontal motion
 
         # Check if the ball hits the ground
         # if self.y >= ground_y - self.radius:
         #     self.y = ground_y - self.radius  # Keep the ball above or on the ground
         #     self.velocity_y = 0
-        
-        if self.velocity_y == 0:
-            self.acceleration = 9.8 - (self.drag * self.velocity_y / self.mass)
-        
-        if self.velocity_y == (self.mass * 9.8 / self.drag):
-            print("Terminal velocity has been reached")
 
     def draw(self, screen):
         # Draw the object (ball in this case)
@@ -48,7 +50,7 @@ class Ball:
 
 ground_y = 550  # Height of the ground
 ball_radius = 10  # Radius of the ball
-ball_x = 0  # Initial x-position of the ball
+ball_x = 500  # Initial x-position of the ball
 ball_y = ground_y - ball_radius # Initial y-position of the ball
 ball_mass = 30 # Mass of the ball
 ball_drag = 10 # Drag coefficient of the ball
