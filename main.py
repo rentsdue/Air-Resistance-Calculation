@@ -1,6 +1,7 @@
 import pygame
 from ball import Ball
 
+
 # Set up the display
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Projectile Motion Simulation With Air Resistance")
@@ -12,48 +13,51 @@ ball_y = ground_y - ball_radius # Initial y-position of the ball
 ball_mass = 40 # Mass of the ball
 ball_drag = 10 # Drag coefficient of the ball
 ball_velocity = 200 #Initial velocity of the ball
-ball_angle = 39 # Angle of velocity
+ball_angles = [35, 40, 45] # Angles of velocity
+ball_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]  # Colors for each trajectory
+ballList = []  # List to store ball objects
 
-# Create a ball object starting at the ground
-ball = Ball(ball_x, ball_y, ball_radius, ball_mass, ball_drag, ball_velocity, ball_angle, ground_y)
+# Create ball objects
+for angle, color in zip(ball_angles, ball_colors):
+    ballList.append(Ball(ball_x, ball_y, ball_radius, ball_mass, ball_drag, ball_velocity, angle, ground_y))
+    ballList[-1].color = color  # Assign color to the ball trajectory
 
 # Create a ground surface
 ground_color = (0, 255, 0)  # Green color for the ground
 ground = pygame.Surface((800, 50))
 ground.fill(ground_color)
 
-trajectory_points = []  # List to store trajectory points
-
 running = True
 clock = pygame.time.Clock()
-while running and not ball.isOnFloor():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+for ball in ballList:
+    trajectory_points = []  # List to store trajectory points
+    while running and not ball.isOnFloor():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    # Update the object
-    ball.update()
+        # Update the object
+        ball.update()
 
-    # Add the current position to the trajectory points
-    trajectory_points.append((ball.x, ball.y))
+        # Add the current position to the trajectory points
+        trajectory_points.append((ball.x, ball.y))
 
-    # Clear the screen
-    screen.fill((0, 0, 0))
+        # Clear the screen
+        screen.fill((0, 0, 0))
 
-    # Draw the ground
-    pygame.draw.rect(screen, (0, 255, 0), (0, ground_y, 800, 50))  # Green ground rectangle
+        # Draw the ground
+        pygame.draw.rect(screen, (0, 255, 0), (0, ground_y, 800, 50))  # Green ground rectangle
 
-    # Draw the trajectory
-    if len(trajectory_points) > 1:
-        pygame.draw.lines(screen, (255, 0, 0), False, trajectory_points, 2)
+        # Draw the trajectory
+        ball.draw_trajectory(screen, trajectory_points)
 
-    # Draw the object
-    ball.draw(screen)
+        # Draw the object
+        ball.draw(screen)
 
-    # Update the display
-    pygame.display.flip()
+        # Update the display
+        pygame.display.flip()
 
-    # Control the frame rate
-    clock.tick(10)
+        # Control the frame rate
+        clock.tick(5)
 
 pygame.quit()
